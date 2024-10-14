@@ -1,0 +1,37 @@
+<?php
+
+
+header("Access-Control-Allow-Origin: *"); // อนุญาตให้เข้าถึงได้จากทุกที่
+header("Access-Control-Allow-Methods: GET, POST, OPTIONS"); // อนุญาตให้ใช้ GET, POST, OPTIONS
+header("Access-Control-Allow-Headers: Content-Type"); // อนุญาตให้ใช้ Header ประเภท Content-Type
+
+header('Content-Type: application/json');
+
+$servername = "localhost";
+$username = "root";
+$password = "180347";
+$dbname = "FoodcourtSystem";
+
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $card_number = $_POST['card_number'];
+
+    $sql = "SELECT * FROM card_info WHERE card_number = '$card_number'";
+    $result = $conn->query($sql);
+
+    if ($result->num_rows > 0) {
+        // การ์ดพบในฐานข้อมูล
+        echo json_encode(["exists" => true]);
+    } else {
+        // การ์ดไม่พบในฐานข้อมูล
+        echo json_encode(["exists" => false]);
+    }
+}
+
+$conn->close();
+?>
